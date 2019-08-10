@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang=”en”>
+<head>
+ <meta charset="UTF-8">
+ <meta name=”viewport” content="width=device-width, initial-scale=1.0">
+ <meta http-equiv=”X-UA-Compatible” content="ie=edge">
+ <title>Document</title>
+<link rel=”stylesheet” type=”text/css” href="index.css">
+<script src="node_modules/web3/dist/web3.js" type="text/javascript"></script>
+<script src="./Splitter_Project/node_modules/truffle-contract/dist/truffle-contract.js" type="text/javascript"></script>
+</head>
+
+
+<body>
+    <div>
+    <div>Splitter</div>
+    <form>
+        Amount to split and send: 
+        <input id ="text">   
+    </form>
+    <button onclick = "executeContract()">Send amount</button>
+</div>
+<div><br>
+	<div>Alices balance</div>
+	<label><var>balance[alice]</var></label>
+	<div>Bobs balance</div>
+	<label><var>balance[bob]</var></label>
+	<div>Carols balance</div>
+	<label><var>balance[carol]</var></label>
+</div>
+    <script>
+		var web3;
+	import Web3 from 'web3';
+    if(typeof web3 !== 'undefined') {
+        web3= new Web3(web3.currentProvider);
+    }else {
+        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"))
+    }
+
+    var addressBob= "0x4FcD08ed2F41541A9bA64c9f423E00c3103CcB0F";
+    var addressCarol= "0x195CB57EB007eF4073D462aa944556F19843D553";
+    var amount = document.getElementById("text").value; 
+
+var provider = new Web3.providers.HttpProvider("http://localhost:7545");
+var splitter_contract = web3.eth.contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "bob",
+				"type": "address"
+			},
+			{
+				"name": "carol",
+				"type": "address"
+			},
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "sendSplit",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	}
+]);
+
+var sendSplit = splitter_contract.at("0x7eac9305ee5755f693adb17729478f0b82f4c04a");
+
+function executeContract(amount){
+    splitter_contract.sendSplit(amount);
+    var amount = document.getElementById("text".value/2);
+	console.log(amount);
+	
+}
+
+        </script>
+</body>
+</html>
