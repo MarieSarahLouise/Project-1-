@@ -13,7 +13,11 @@ contract Splitter {
      
         uint remainder = msg.value % 2; 
         amount = (msg.value-remainder)/2;
-        balance[msg.sender] += remainder; 
+        
+        if(remainder <0){
+        balance[msg.sender] += remainder;
+            
+        }
            
         balance[bob] += amount;
         balance[carol] += amount; 
@@ -25,9 +29,12 @@ contract Splitter {
        
       function withdraw() public returns(bool success) {
         require(balance[msg.sender] >= 1);
-        emit Withdraw(msg.sender, balance[msg.sender]);
-        msg.sender.transfer(balance[msg.sender]);  
+        amount = balance[msg.sender];
         balance[msg.sender] == 0; 
+        
+        emit Withdraw(msg.sender, amount);
+        msg.sender.transfer(amount);  
+        
         
         return true;
             }
