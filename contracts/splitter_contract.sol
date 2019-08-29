@@ -9,26 +9,27 @@ contract Splitter {
     constructor() public payable{}
 
     function sendSplit ( address payable bob, address payable carol) public payable returns(bool success){
+     require(msg.value>0, "You need to send value");
      
-    if(msg.value >= 1) {
-        amount = msg.value/2;
-            if(amount %2 != 0){
-                amount -= 1; 
-            }
+        uint remainder = msg.value % 2; 
+        amount = (msg.value-remainder)/2;
+        balance[msg.sender] += remainder; 
+           
         balance[bob] += amount;
         balance[carol] += amount; 
-    
-        emit Sent(msg.sender, bob, carol, amount); 
-            }
+            
+        emit Sent(msg.sender, bob, carol, msg.value); 
+            
         return true;
-       }
+    }
        
-      function withdraw() public {
+      function withdraw() public returns(bool success) {
         require(balance[msg.sender] >= 1);
-          msg.sender.transfer(balance[msg.sender]); 
         emit Withdraw(msg.sender, balance[msg.sender]);
-        
+        msg.sender.transfer(balance[msg.sender]);  
         balance[msg.sender] == 0; 
+        
+        return true;
             }
        
 }
