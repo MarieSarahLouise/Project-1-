@@ -12,7 +12,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "truffle-contract": "^4.0.27",
-    "web3": "github:ethereum/web3.js"
+    "bluebird": "^3.5.5",
+    "http-server": "^0.11.1",
+    "jquery": "^3.4.1",
+    "save-dev": "^2.0.0",
+    "truffle-contract": "^4.0.30",
+    "web3": "^1.2.1",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
+  },
+  "devDependencies": {
+    "create-html": "^4.1.0",
+    "file-loader": "^4.2.0"
   }
 }
