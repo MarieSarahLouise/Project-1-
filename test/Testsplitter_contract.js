@@ -1,4 +1,4 @@
-const Splitter = artifacts.require('./Spliter_Project/contracts/splitter_contract.sol');
+const Splitter = artifacts.require('./Splitter_Project/build/contracts/Splitter.json');
 const assert = require('assert');
 const expectedExeption = require("../utils/expectedExeption.js");
 

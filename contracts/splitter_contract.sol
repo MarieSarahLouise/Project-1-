@@ -1,26 +1,25 @@
 pragma solidity ^0.5.0;
 
-contract Splitter {
-    mapping (address => uint) public balance;
-    uint256 amount;
+contract splitter_contract {
+    mapping (address => uint) public balances;
     event Sent(address from, address bob, address carol, uint256 amount);
     event Withdraw ( address from, uint256 amount);
     
     constructor() public payable{}
 
-    function sendSplit ( address payable bob, address payable carol) public payable returns(bool success){
+    function sendSplit ( address bob, address carol) public payable returns(bool success){
      require(msg.value>0, "You need to send value");
      
         uint remainder = msg.value % 2; 
-        amount = (msg.value-remainder)/2;
+        uint256 amount = (msg.value-remainder)/2;
         
-        if(remainder <0){
-        balance[msg.sender] += remainder;
+        if(remainder != 0){
+        balances[msg.sender] += remainder;
             
         }
            
-        balance[bob] += amount;
-        balance[carol] += amount; 
+        balances[bob] += amount;
+        balances[carol] += amount; 
             
         emit Sent(msg.sender, bob, carol, msg.value); 
             
@@ -28,12 +27,13 @@ contract Splitter {
     }
        
       function withdraw() public returns(bool success) {
-        require(balance[msg.sender] >= 1);
-        amount = balance[msg.sender];
-        balance[msg.sender] == 0; 
+          uint256 toWithdraw = balances[msg.sender];
+        require(toWithdraw >= 1);
         
-        emit Withdraw(msg.sender, amount);
-        msg.sender.transfer(amount);  
+        balances[msg.sender] == 0; 
+        
+        emit Withdraw(msg.sender, toWithdraw);
+        msg.sender.transfer(toWithdraw);  
         
         
         return true;

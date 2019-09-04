@@ -1,4 +1,4 @@
-var Splitter = artifacts.require("./splitter_contract.sol");
+var Splitter = artifacts.require("splitter_contract");
 
 module.exports = function(deployer) {
 
