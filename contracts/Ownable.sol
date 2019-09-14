@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
-contract Owner {
-    address payable owner;
+contract Ownable {
+    address private owner;
 
     constructor() public { owner = msg.sender; }
 
@@ -13,7 +13,8 @@ contract Owner {
         _;
     }
 
-    function changeOwner(address payable newOwner) public {
+    function changeOwner(address payable newOwner) public onlyOwner {
+        require (newOwner != address(0x0), "You need to pass a valid address");
         owner = newOwner;
     }
 
