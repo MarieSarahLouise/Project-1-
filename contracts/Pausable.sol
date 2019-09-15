@@ -1,24 +1,24 @@
 pragma solidity ^0.5.0;
 
-import "./Owner.sol";
+import "./Ownable.sol";
 
-contract Pause is Owner {
+contract Pausable is Ownable {
 
   event LogPause();
   event LogResume();
   bool public paused = false;
 
-  modifier whenNotPaused() {
+  modifier whenRunning() {
     require(!paused, "The contract is paused");
     _;
   }
 
   modifier whenPaused() {
-    require(paused, "The contract is not paused");
+    require(paused, "The contract is running");
     _;
   }
 
-  function pause() public onlyOwner whenNotPaused {
+  function pause() public onlyOwner whenRunning {
     paused = true;
     emit LogPause();
   }
