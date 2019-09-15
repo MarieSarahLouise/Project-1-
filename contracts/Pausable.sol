@@ -6,7 +6,7 @@ contract Pausable is Ownable {
 
   event LogPause();
   event LogResume();
-  bool public paused = false;
+  bool private paused = false;
 
   modifier whenRunning() {
     require(!paused, "The contract is paused");
