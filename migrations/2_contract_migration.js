@@ -1,8 +1,8 @@
 var Splitter = artifacts.require("./Splitter.sol");
 var SafeMath = artifacts.require("./SafeMath.sol");
-var Pause = artifacts.require("./Pause.sol");
-var Kill = artifacts.require("./Kill.sol");
-var Owner = artifacts.require("./Owner.sol");
+var Pause = artifacts.require("./Pausable.sol");
+var Kill = artifacts.require("./Killable.sol");
+var Owner = artifacts.require("./Ownable.sol");
 
 module.exports = function(deployer) {
 
