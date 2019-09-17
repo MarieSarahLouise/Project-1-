@@ -2,7 +2,6 @@ pragma solidity ^0.5.0;
 
 import "./SafeMath.sol";
 import "./Killable.sol";
-import "./Pausable.sol";
 
 contract Splitter is Pausable, Killable {
     mapping (address => uint) public balances;
