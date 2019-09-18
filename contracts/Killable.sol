@@ -4,7 +4,7 @@ import "./Pausable.sol";
 
 contract Killable is Ownable, Pausable{
 
-    event LogKill(address owner, string status );
+    event LogKill(address indexed owner, string indexed status );
 
     bool killed;
 
@@ -20,13 +20,13 @@ contract Killable is Ownable, Pausable{
         _;
     }
 
-    function kill() public onlyOwner whenPaused whenAlive{
+    function kill() private onlyOwner whenPaused whenAlive{
         killed = true;
         emit LogKill(msg.sender, "The contract has been killed.");
     }
 
     function returnTheFunds() public payable onlyOwner whenKilled{
-        require(address(this).balance == 0, "No value in the contract");
+        require(address(this).balance != 0, "No value in the contract");
         msg.sender.transfer(address(this).balance);
     }
 }
