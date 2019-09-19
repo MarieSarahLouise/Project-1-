@@ -4,8 +4,8 @@ import "./Ownable.sol";
 
 contract Pausable is Ownable {
 
-  event LogPause(address indexed owner, string indexed message);
-  event LogResume(address indexed owner, string indexed message);
+  event LogPause(address indexed sender);
+  event LogResume(address indexed sender);
   bool private paused = false;
 
   modifier whenRunning() {
@@ -20,12 +20,12 @@ contract Pausable is Ownable {
 
   function pause() public onlyOwner whenRunning {
     paused = true;
-    emit LogPause(msg.sender,"The contact has been paused" );
+    emit LogPause(msg.sender);
   }
 
   function resume() public onlyOwner whenPaused {
     paused = false;
-    emit LogResume(msg.sender, "The contract has been resumed");
+    emit LogResume(msg.sender);
   }
 
 }
