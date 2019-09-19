@@ -35,10 +35,10 @@ contract Splitter is Pausable, Killable {
           require(toWithdraw != 0, "You don't have funds to withdraw");
         
         balances[msg.sender] = 0; 
-        
         emit LogAmountWithdrawn(msg.sender, toWithdraw);
-        msg.sender.transfer(toWithdraw);  
         
+        (bool Success, ) = msg.sender.call.value(toWithdraw)("");
+        require(Success, "No value was transfered to your account");
         
         return true;
             }

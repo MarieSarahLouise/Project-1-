@@ -6,7 +6,7 @@ contract Killable is Ownable, Pausable{
 
     event LogKill(address indexed owner, string indexed status );
 
-    bool killed;
+    bool private killed;
 
     constructor() public {killed;}
 
@@ -20,13 +20,15 @@ contract Killable is Ownable, Pausable{
         _;
     }
 
-    function kill() private onlyOwner whenPaused whenAlive{
+    function kill() public onlyOwner whenPaused whenAlive{
         killed = true;
         emit LogKill(msg.sender, "The contract has been killed.");
     }
 
-    function returnTheFunds() public payable onlyOwner whenKilled{
+    function returnTheFunds() external onlyOwner whenKilled{
         require(address(this).balance != 0, "No value in the contract");
-        msg.sender.transfer(address(this).balance);
+        uint256 amount = address(this).balance;
+        (bool success, ) = msg.sender.call.value(amount)("");
+        require(success, "Refund failed");
     }
 }
