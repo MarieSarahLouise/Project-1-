@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 contract Ownable {
     address private owner;
-    event LogChangedOwner(address oldOwner, address newOwner);
+    event LogChangedOwner(address indexed oldOwner, address indexed newOwner);
     constructor() public { owner = msg.sender; }
 
     modifier onlyOwner {
