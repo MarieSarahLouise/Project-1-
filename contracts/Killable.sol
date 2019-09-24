@@ -2,13 +2,13 @@ pragma solidity ^0.5.0;
 
 import "./Pausable.sol";
 
-contract Killable is Ownable, Pausable{
+contract Killable is Pausable{
 
-    event LogKill(address indexed owner, string indexed status );
+    event LogKill(address indexed owner);
+    
+    bool killed;
 
-    bool private killed;
-
-    constructor() public {killed;}
+    constructor() public {}
 
     modifier whenKilled() {
         require(killed, "The contract is still running.");
@@ -20,15 +20,18 @@ contract Killable is Ownable, Pausable{
         _;
     }
 
+    function getKilledStatus() external returns(bool killedStatus) {
+        killedStatus = killed;
+        return killedStatus;
+    }
     function kill() public onlyOwner whenPaused whenAlive{
         killed = true;
-        emit LogKill(msg.sender, "The contract has been killed.");
+        emit LogKill(msg.sender);
     }
 
     function returnTheFunds() external onlyOwner whenKilled{
         require(address(this).balance != 0, "No value in the contract");
-        uint256 amount = address(this).balance;
-        (bool success, ) = msg.sender.call.value(amount)("");
+        (bool success, ) = msg.sender.call.value(address(this).balance)("");
         require(success, "Refund failed");
     }
 }

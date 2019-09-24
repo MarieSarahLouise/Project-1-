@@ -13,7 +13,7 @@ contract Ownable {
         _;
     }
 
-    function changeOwner(address payable newOwner) private onlyOwner {
+    function changedOwner(address payable newOwner) private onlyOwner {
         require (newOwner != address(0x0), "You need to pass a valid address");
         emit LogChangedOwner(owner, newOwner);
         owner = newOwner;
