@@ -20,13 +20,25 @@
     </form>
     <button onclick = "executeContract()">Send amount</button>
 </div>
-<div><br>
+<div><br><form>
 	<div>Alices balance</div>
 	<label><var>balance[alice]</var></label>
+</form>
+	<br>
+	<form>
+        Bobs address: 
+        <input id ="text">   
+    <br>
 	<div>Bobs balance</div>
-	<label><var>balance[bob]</var></label>
+	<label><var>balance[bob]</var></label> </form><br>
+	
+	<form>
+		Carols address: 
+		<input id ="text">   
+	<br>
 	<div>Carols balance</div>
-	<label><var>balance[carol]</var></label>
+	<label><var>balance[carol]</var></label></form>
+
 </div>
     <script>
 		var web3;
