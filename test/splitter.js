@@ -3,7 +3,6 @@ const assert = require('assert');
 const truffleAssert = require('truffle-assertions');
 
 contract('Splitter', (accounts) => {
-    const contractInstance;
     const [alice, bob, carol, notOwner] = accounts;
      beforeEach("create new instance", async () => {
         contractInstance = await Splitter.new( { from: alice } );
