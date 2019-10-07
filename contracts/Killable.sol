@@ -4,7 +4,7 @@ import "./Pausable.sol";
 
 contract Killable is Pausable{
 
-    event LogKill(address indexed owner);
+    event LogKill(address indexed sender);
     
     bool killed;
 
@@ -20,9 +20,8 @@ contract Killable is Pausable{
         _;
     }
 
-    function getKilledStatus() external returns(bool killedStatus) {
-        killedStatus = killed;
-        return killedStatus;
+    function isKilled() public view returns(bool _killed) {
+        return killed;
     }
     function kill() public onlyOwner whenPaused whenAlive{
         killed = true;
