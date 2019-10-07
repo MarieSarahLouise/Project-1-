@@ -4,8 +4,8 @@ import "./Ownable.sol";
 
 contract Pausable is Ownable {
 
-  event LogPause(address indexed sender);
-  event LogResume(address indexed sender);
+  event LogPaused(address indexed sender);
+  event LogResumed(address indexed sender);
 
   bool private paused = false;
  
@@ -19,19 +19,18 @@ contract Pausable is Ownable {
     _;
   }
 
-  function getPausedStatus() external returns(bool pausedStatus) {
-    pausedStatus = paused;
-    return pausedStatus;
+  function isPaused() public view returns(bool _paused) {
+    return paused;
   }
 
   function pause() public onlyOwner whenRunning {
     paused = true;
-    emit LogPause(msg.sender);
+    emit LogPaused(msg.sender);
   }
 
   function resume() public onlyOwner whenPaused {
     paused = false;
-    emit LogResume(msg.sender);
+    emit LogResumed(msg.sender);
   }
 
 }
