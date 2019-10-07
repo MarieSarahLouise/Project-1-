@@ -53,9 +53,9 @@ const sendSplit = async function(){
             $("input[name = 'amount']").val(),
             { from: window.account, gas: gas })
             .on("transactionHash", 
-            txHash => $("#status").html("Transact on the way " + txhash));
-            const receipt = txObj.receipt;
-            console.log("got receipt", receipt);
+            txHash => $("#status").html("Transact on the way " + txhash))
+            .on("receipt",
+            console.log("got receipt", receipt));
             if(!receipt.status) {
                 console.error("Wrong status");
                 console.error(receipt);
@@ -70,5 +70,8 @@ const sendSplit = async function(){
             }
             const balance = await deployed.getBalance.call(window.account);
             $("#balance").html(balance.toString(10));
+            
+    } catch(err){
+        console.log(err);
     }
 };
