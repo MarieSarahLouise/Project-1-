@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
 contract Ownable {
-    address private owner;
+    address owner;
     event LogChangedOwner(address indexed oldOwner, address indexed newOwner);
     constructor() public { owner = msg.sender; }
 
@@ -17,6 +17,10 @@ contract Ownable {
         require (newOwner != address(0x0), "You need to pass a valid address");
         owner = newOwner;
         emit LogChangedOwner(msg.sender, newOwner);
+    }
+
+    function isOwner() public view returns(address _owner){
+        return owner;
     }
 
 }
