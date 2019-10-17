@@ -6,7 +6,7 @@ contract Killable is Pausable{
 
     event LogKilled(address indexed sender);
     
-    bool killed;
+    bool private killed;
 
     constructor() public {}
 
@@ -23,6 +23,7 @@ contract Killable is Pausable{
     function isKilled() public view returns(bool _killed) {
         return killed;
     }
+     
     function kill() public onlyOwner whenPaused whenAlive{
         killed = true;
         emit LogKilled(msg.sender);

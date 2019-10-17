@@ -7,7 +7,7 @@ contract Pausable is Ownable {
   event LogPaused(address indexed sender);
   event LogResumed(address indexed sender);
 
-  bool private paused = false;
+  bool private paused;
  
   modifier whenRunning() {
     require(!paused, "The contract is paused");
