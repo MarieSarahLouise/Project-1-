@@ -12,50 +12,35 @@ contract('Splitter', (accounts) => {
 
     it('bobs balance should be equal to his original balance, minus the gas price, plus the withdrawn amount', async() => {
         const toWithdraw = web3.utils.toWei(web3.utils.toBN(1, 'ether'));
-        console.log('toWithdraw'+toWithdraw);
         const balanceBefore = await web3.eth.getBalance(bob);
         
-
         await contractInstance.split( bob, carol, { from: alice, value: toWithdraw } )
 
         const balanceAfter = await web3.eth.getBalance(bob);
         const txObj = await contractInstance.withdraw( { from: bob } );
-        //console.log(JSON.stringify(txObj, null, 4));
-        console.log('balanceBefore'+balanceBefore);
-        
-        console.log('balaceAfter'+balanceAfter);
         const tx = await web3.eth.getTransaction(txObj);
         const receipt = await web3.eth.getTransactionReceipt(tx);
         const gasCost = tx.gasPrice.mul(receipt.gasUsed);  
-        console.log('gasCost'+gasCost);
-        console.log('wtf');
 
-        assert.strictEqual(balanceAfter, (balanceBefore-gasCost+toWithdraw));
+        assert.strictEqual(balanceAfter, (balanceBefore-gasCost+toWithdraw), 'bobs balance is not right');
 
         });
         
     
 
-    it('The internal balances of Carol and Bob after executing split() should be equal to half of the amount, alices internal balance should be equal to her original balance minus the split amount.', async() => {
+    it('The internal balances of Carol and Bob after executing split() should be equal to half of the amount.', async() => {
         const amount = web3.utils.toWei(web3.utils.toBN(1, 'ether'));
-        console.log('amount'+amount);
 
-        const alicesBalanceBefore = await (contractInstance.balances[0]);
-        console.log(alicesBalanceBefore);
-        const bobsBalanceBefore = await (contractInstance.balances[1]);
-        const carolsBalanceBefore = await (contractInstance.balances[2]);
+        const bobsBalanceBefore = web3.utils.toBN(await contractInstance.isBalance(bob));
+        const carolsBalanceBefore = (await contractInstance.isBalance(carol));
        
         await contractInstance.split(bob, carol, { from : alice , value: amount} );
 
-        const alicesBalanceAfter = await (contractInstance.balances[0]);
-        console.log(alicesBalanceAfter);
-        const carolsBalanceAfter = await (contractInstance.balances[1]);
-        const bobsBalanceAfter = await (contractInstance.balances[2]);
-        
-        
-        assert.strictEqual(alicesBalanceAfter, (alicesBalanceBefore- amount));
-        assert.strictEqual(carolsBalanceAfter, (carolsBalanceBefore + (amount/2)));
-        assert.strictEqual(bobsBalanceAfter, (bobsBalanceBefore + (amount/2)));
+        const carolsBalanceAfter = web3.utils.toBN(await (contractInstance.isBalance(bob)));
+        const bobsBalanceAfter = web3.utils.toBN(await contractInstance.isBalance(carol));
+
+        assert.strictEqual(carolsBalanceAfter, (carolsBalanceBefore.add(web3.utils.toBN(amount/2))), 'carols balance is not right');
+        assert.strictEqual(bobsBalanceAfter, (bobsBalanceBefore.add(web3.utils.toBN(amount/2))),'bobs balance is not right');
 
     });
 
