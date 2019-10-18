@@ -6,26 +6,26 @@ contract Killable is Pausable{
 
     event LogKilled(address indexed sender);
     
-    bool private killed;
+    bool private _isKilled;
 
     constructor() public {}
 
     modifier whenKilled() {
-        require(killed, "The contract is still running.");
+        require(_isKilled, "The contract is still running.");
         _;
     }
 
     modifier whenAlive() {
-        require(!killed, "The contract has already been killed.");
+        require(!_isKilled, "The contract has already been killed.");
         _;
     }
 
     function isKilled() public view returns(bool _killed) {
-        return killed;
+        return _isKilled;
     }
      
     function kill() public onlyOwner whenPaused whenAlive{
-        killed = true;
+        _isKilled = true;
         emit LogKilled(msg.sender);
     }
 
