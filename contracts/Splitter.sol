@@ -13,33 +13,37 @@ contract Splitter is  Killable {
     constructor() public {}
 
     function split(address bob, address carol) external payable whenRunning whenAlive returns(bool success){
-      require(msg.value != 0, "You need to send value");
-      require(bob != address(0x0) && carol != address(0x0), "You need to pass valid addresses");
-      uint256 remainder = msg.value.mod(2); 
-      uint256 amount = msg.value.div(2);
+        require(msg.value != 0, "You need to send value");
+        require(bob != address(0x0) && carol != address(0x0), "You need to pass valid addresses");
+        uint256 remainder = msg.value.mod(2); 
+        uint256 amount = msg.value.div(2);
         
-      if(remainder != 0){
-          balances[msg.sender] = balances[msg.sender].add(remainder);
+        if(remainder != 0){
+            balances[msg.sender] = balances[msg.sender].add(remainder);
       }
 
-      balances[bob] = balances[bob].add(amount);
-      balances[carol] = balances[carol].add(amount);
+        balances[bob] = balances[bob].add(amount);
+        balances[carol] = balances[carol].add(amount);
 
-      emit LogAmountSent(msg.sender, bob, carol, msg.value); 
+        emit LogAmountSent(msg.sender, bob, carol, msg.value); 
 
-      return true;
+        return true;
     }
 
-      function withdraw() public whenRunning whenAlive returns(bool success) {
+    function withdraw() public whenRunning whenAlive returns(bool success) {
         uint256 toWithdraw = balances[msg.sender];
         require(toWithdraw != 0, "You don't have funds to withdraw");
-
+      
         balances[msg.sender] = 0; 
         emit LogAmountWithdrawn(msg.sender, toWithdraw);
 
         (success, ) = msg.sender.call.value(toWithdraw)("");
         require(success, "No value was transfered to your account");
 
-       }
+    }
+
+    function isBalance(address _key) public view whenRunning whenAlive returns(uint){
+       return balances[_key];
+    }
 
   }
