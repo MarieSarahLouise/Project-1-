@@ -11,36 +11,27 @@ contract('Splitter', (accounts) => {
     });  
 
     it('bobs balance should be equal to his original balance, minus the gas price, plus the withdrawn amount', async() => {
-        const toWithdraw = web3.utils.toWei(web3.utils.toBN(1, 'ether'));
+        const toWithdraw = 1000000000000000000;
         const balanceBefore = await web3.eth.getBalance(bob);
-        
-        await contractInstance.split( bob, carol, { from: alice, value: toWithdraw } )
-
-        const balanceAfter = await web3.eth.getBalance(bob);
+        await contractInstance.split( bob, carol, { from: alice, value: toWithdraw } );
         const txObj = await contractInstance.withdraw( { from: bob } );
-        const tx = await web3.eth.getTransaction(txObj);
-        const receipt = await web3.eth.getTransactionReceipt(tx);
-        const gasCost = tx.gasPrice.mul(receipt.gasUsed);  
-
-        assert.strictEqual(balanceAfter, (balanceBefore-gasCost+toWithdraw), 'bobs balance is not right');
-
+        const tx = await web3.eth.getTransaction(txObj.tx);
+        const receipt = txObj.receipt;
+        const balanceAfter = await web3.eth.getBalance(bob);
+        const gasCost = (tx.gasPrice)*(receipt.gasUsed); 
+        assert.equal(balanceAfter, balanceBefore -  gasCost + toWithdraw/2, 'bobs balance is not right');
         });
         
-    
-
     it('The internal balances of Carol and Bob after executing split() should be equal to half of the amount.', async() => {
-        const amount = web3.utils.toWei(web3.utils.toBN(1, 'ether'));
-
-        const bobsBalanceBefore = web3.utils.toBN(await contractInstance.isBalance(bob));
-        const carolsBalanceBefore = (await contractInstance.isBalance(carol));
-       
+        const amount = 1000000000000000000;
+        const bobsBalanceBefore = await contractInstance.isBalance(bob);
+        const carolsBalanceBefore = await contractInstance.isBalance(carol);
         await contractInstance.split(bob, carol, { from : alice , value: amount} );
-
-        const carolsBalanceAfter = web3.utils.toBN(await (contractInstance.isBalance(bob)));
-        const bobsBalanceAfter = web3.utils.toBN(await contractInstance.isBalance(carol));
-
-        assert.strictEqual(carolsBalanceAfter, (carolsBalanceBefore.add(web3.utils.toBN(amount/2))), 'carols balance is not right');
-        assert.strictEqual(bobsBalanceAfter, (bobsBalanceBefore.add(web3.utils.toBN(amount/2))),'bobs balance is not right');
+        const bobsBalanceAfter = await (contractInstance.balances(bob));
+        const carolsBalanceAfter = await contractInstance.isBalance(carol);
+        
+        assert.equal(carolsBalanceAfter, +carolsBalanceBefore + amount/2, 'carols balance is not right');
+        assert.equal(bobsBalanceAfter, +bobsBalanceBefore + amount/2,'bobs balance is not right');
 
     });
 
@@ -49,7 +40,6 @@ contract('Splitter', (accounts) => {
             contractInstance.pause( { from: notOwner } ),
             "Only the owner can call this function."
         );
-
     });
 
     it('The contract should be paused when the pause() function is called', async() => {
