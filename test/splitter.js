@@ -26,7 +26,7 @@ contract('Splitter', (accounts) => {
         const amount = 1000000000000000000;
         const bobsBalanceBefore = await contractInstance.isBalance(bob);
         const carolsBalanceBefore = await contractInstance.isBalance(carol);
-        await contractInstance.split(bob, carol, { from : alice , value: amount} );
+        await contractInstance.split(bob, carol, { from : alice , value: amount } );
         const bobsBalanceAfter = await (contractInstance.balances(bob));
         const carolsBalanceAfter = await contractInstance.isBalance(carol);
         
