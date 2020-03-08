@@ -21,7 +21,7 @@ contract Ownable {
         emit LogChangedOwner(msg.sender, newOwner);
     }
 
-    function isOwner() public view returns(address _owner){
+    function getOwner() public view returns(address _owner){
         return owner;
     }
 
