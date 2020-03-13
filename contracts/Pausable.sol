@@ -7,29 +7,29 @@ contract Pausable is Ownable {
   event LogPaused(address indexed sender);
   event LogResumed(address indexed sender);
 
-  bool private _isPaused;
+  bool private paused;
  
   modifier whenRunning() {
-    require(!_isPaused, "The contract is paused");
+    require(!paused, "The contract is paused");
     _;
   }
 
   modifier whenPaused() {
-    require(_isPaused, "The contract is running");
+    require(paused, "The contract is running");
     _;
   }
 
   function isPaused() public view returns(bool _paused) {
-    return _isPaused;
+    return paused;
   }
 
   function pause() public onlyOwner whenRunning {
-    _isPaused = true;
+    paused = true;
     emit LogPaused(msg.sender);
   }
 
   function resume() public onlyOwner whenPaused {
-    _isPaused = false;
+    paused = false;
     emit LogResumed(msg.sender);
   }
 
