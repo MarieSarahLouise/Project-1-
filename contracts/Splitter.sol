@@ -42,7 +42,7 @@ contract Splitter is  Killable {
 
     }
 
-    function isBalance(address _key) public view whenRunning whenAlive returns(uint){
+    function getBalance(address _key) public view returns(uint){
        return balances[_key];
     }
 
