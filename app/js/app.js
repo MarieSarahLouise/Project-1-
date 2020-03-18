@@ -1,3 +1,4 @@
+require("file-loader?name=../index.html!../index.html");
 const Web3 = require("web3");
 const Promise = require("bluebird");
 const truffleContact = require("truffle-contract");
