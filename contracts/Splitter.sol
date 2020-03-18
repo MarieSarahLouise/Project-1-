@@ -4,7 +4,7 @@ import "./SafeMath.sol";
 import "./Killable.sol";
 
 contract Splitter is  Killable {
-    mapping (address => uint) public balances;
+    mapping (address => uint) private balances;
     event LogAmountSent(address indexed from, address indexed bob, address indexed carol, uint256 amount);
     event LogAmountWithdrawn(address indexed from, uint256 amount);
 
@@ -12,7 +12,7 @@ contract Splitter is  Killable {
 
     constructor() public {}
 
-    function split(address bob, address carol) external payable whenRunning whenAlive returns(bool success){
+    function split(address bob, address carol) external payable whenRunning whenAlive returns(bool success) {
         require(msg.value != 0, "You need to send value");
         require(bob != address(0x0) && carol != address(0x0), "You need to pass valid addresses");
         uint256 remainder = msg.value.mod(2); 
@@ -42,7 +42,7 @@ contract Splitter is  Killable {
 
     }
 
-    function getBalance(address _key) public view returns(uint){
+    function getBalance(address _key) public view returns(uint) {
        return balances[_key];
     }
 
