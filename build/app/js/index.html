@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<title>Splitter Project</title>
+<meta charset="utf-8">
+
+
+
+
+</head>
+<body>
+
+    <div>Alices balance <span id="balance">Loading...</span> </div>
+    <div>
+        Split<input name="amount" type="number" placeholder="0" /> Ether
+        between <input name="bob" type="text" placeholder="0x0011223344556677889900112233445566778899" />
+        and <input name="carol" type="text" placeholder="0x0011223344556677889900112233445566778899" />
+        <button id="send" (click)="sendSplit()">Now</button>.
+    </div>
+    <div id="status"></div>
+    
+    <script src= "js/app.js" ></script>
+
+
+
+</body>
+</html>
