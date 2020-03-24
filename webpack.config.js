@@ -1,5 +1,5 @@
 module.exports= {
-    entry:"./app/js/app.js",
+    entry:"/Users/malou/Desktop/Splitter_Project/app/js/app.js",
     output: {
         path: __dirname + "/build/app/js",
         filename: "app.js"
