@@ -5,7 +5,7 @@ import "./Pausable.sol";
 contract Killable is Pausable {
 
     event LogKilled(address indexed sender);
-    event LogReturnFunds(address indexed sender, indexed uint256 amount);
+    event LogReturnFunds(address indexed sender, uint256 amount);
     
     bool private killed;
 
@@ -32,8 +32,8 @@ contract Killable is Pausable {
 
     function returnTheFunds() external onlyOwner whenKilled {
         require(address(this).balance != 0, "No value in the contract");
+        emit LogReturnFunds(msg.sender, address(this).balance);
         (bool success, ) = msg.sender.call.value(address(this).balance)("");
         require(success, "Refund failed");
-        emit LogReturnFunds(msg.sender, address(this).balance);
     }
 }
