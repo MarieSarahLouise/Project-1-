@@ -11,12 +11,13 @@
 <body>
 
     <div>Alices balance <span id="balance">Loading...</span> </div>
+    <div>
         <button id="AllowMyAddresses">Allow my addresses to be used.</button><br>
     <div>
         Split<input name="amount" type="number" placeholder="0" /> Ether
         between <input name="bob" type="text" placeholder="0x0011223344556677889900112233445566778899" />
         and <input name="carol" type="text" placeholder="0x0011223344556677889900112233445566778899" />
-        <button id="send" onclick = "sendSplit()">Now</button>.
+        <button id="send" onclick = "sendSplit()">Now</button>. <!-- Does not work => 'Uncaught ReferenceError: sendSplit is not defined' -->
     </div>
     <div id="status"></div>
     
