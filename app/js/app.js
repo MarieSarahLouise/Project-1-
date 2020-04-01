@@ -41,23 +41,23 @@ window.addEventListener('load', async function(){
         }        
     }
 
-    const sendSplit = function() {
+    const sendSplit = async function() {
         const gas = 300000; 
-        let deployed;
-        return Splitter.deployed()
-        .then(_deployed => {
+        await Splitter.deployed();
+        const deployed = async function(){
             deployed = _deployed;
             return  _deployed.sendSplit.call(
                 $("input[name = 'bob']").val(), 
                 $("input[name = 'carol']").val(),
                 $("input[name = 'amount']").val(),
                 { from: window.account, gas : gas });
-            })
-        .then(success => {
+            };
+
+        const success = async function() {
             if (!success) {
                     throw new Error("The transaction will fail anyway, not sending.");
                 }
-            return deployed.sendSplit(
+            deployed = await deployed.sendSplit(
                 $("input[name = 'bob']").val(), 
                 $("input[name = 'carol']").val(),
                 $("input[name = 'amount']").val(),
@@ -66,9 +66,11 @@ window.addEventListener('load', async function(){
                     "transactionHash",
                     txHash => $("#status").html("Transaction on the way " + txHash)
                 );
-        })
-        .then(txObj => {
-            const receipt = txObj.receipt;
+                return deployed;
+        };
+
+        const txObj = async function() {
+            const receipt = await txObj.receipt;
             console.log("got receipt", receipt);
             if (!receipt.status) {
                 console.error("Wrong status");
@@ -82,13 +84,16 @@ window.addEventListener('load', async function(){
                 console.log(receipt.logs[0]);
                 $("#status").html("Transfer executed");
             }
-            return deployed.getBalance.call(window.account);
-            })
-        .then(balance => $("#balance").html(balance.toString(10)))
-        .catch(e => {
-            $("#status").html(e.toString());
-            console.error(e);
-            });
+            return await deployed.getBalance.call(window.account);
+            };
+
+            try { 
+                const balance = $("#balance").html(balance.toString(10));
+            }
+            catch(e) {
+                $("#status").html(e.toString());
+                console.error(e);
+            };
         };
 });
 
