@@ -1,8 +1,8 @@
 const Splitter = artifacts.require("Splitter");
 const assert = require("assert");
 const truffleAssert = require("truffle-assertions");
-const { toWei } = web3.utils;
-const { toBN } = web3.utils;
+const { toWei, toBN } = web3.utils;
+
 contract("Splitter", (accounts) => {
    
     const [alice, bob, carol, notOwner] = accounts;
@@ -12,11 +12,11 @@ contract("Splitter", (accounts) => {
     });  
 
     it("Split should emit the expected event", async function(){
-        const amount = toBN(toWei("1", "Gwei"));
+        const amount = toWei(toBN("1"), "Gwei");
         const splitObj = await contractInstance.split(bob, carol, { from: alice, value: amount });
         const { logs } = splitObj;
         assert.strictEqual(logs.length, 1);
-        const splitEvent = splitObj.logs[0];
+        const splitEvent = splitObj.logs[0]; 
         assert.strictEqual(splitEvent.event, "LogAmountSent");
         assert.strictEqual(splitEvent.args.from, alice);
         assert.strictEqual(splitEvent.args.bob, bob);
@@ -36,38 +36,38 @@ contract("Splitter", (accounts) => {
     });
 
     it("Carol and Bob should have the expected internal balances after split (even amounts).", async function() {
-        const amount = toBN(toWei("1", "Gwei"));
+        const amount = toWei(toBN("1"), "Gwei");
         await contractInstance.split(bob, carol, { from : alice , value: amount });
-        const bobsBalanceAfter = await (contractInstance.getBalance(bob));
-        const carolsBalanceAfter = await (contractInstance.getBalance(carol));
+        const bobsBalanceAfter = await contractInstance.getBalance(bob);
+        const carolsBalanceAfter = await contractInstance.getBalance(carol);
 
         assert.strictEqual(carolsBalanceAfter.toString(),  toWei("0.5", "Gwei"), "carols balance is not right.");
         assert.strictEqual(bobsBalanceAfter.toString(),  toWei("0.5", "Gwei"), "bobs balance is not right.");
     });
        
     it("Withdraw should emit the expected event.", async function(){
-        const amountToSplit = toBN(toWei("1", "Gwei"));
+        const amountToSplit = toWei(toBN("1"), "Gwei");
         await contractInstance.split( bob, carol, { from: alice, value: amountToSplit });
         const withdrawObj = await contractInstance.withdraw({ from: bob });
-        const withdrawEvents = withdrawObj.logs[0];
         assert.strictEqual(withdrawObj.logs.length, 1);
+        const withdrawEvents = withdrawObj.logs[0];
         assert.strictEqual(withdrawEvents.event, "LogAmountWithdrawn", "The right event was not emitted.");
         assert.strictEqual(withdrawEvents.args.from, bob, "Bobs adress is not right.");
         assert.strictEqual(withdrawEvents.args.amount.toString(), toWei("0.5", "Gwei"), "The right amount was not emitted.");
     });
 
     it("Bobs balance should not be reset after each split and Carol should be able to send ether.", async function() {
-        const amount1 = toBN(toWei("1", "Gwei"));
-        const amount2 = toBN(toWei("0.5", "Gwei"));
+        const amount1 = toWei("1", "Gwei");
+        const amount2 = toWei("0.5", "Gwei");
         await contractInstance.split(alice, bob, { from: carol , value: amount1 });
         await contractInstance.split(carol, bob, { from: alice, value : amount2 });
-        const bobsBalanceAfter = await (contractInstance.getBalance(bob));
+        const bobsBalanceAfter = await contractInstance.getBalance(bob);
 
         assert.strictEqual(bobsBalanceAfter.toString(), toWei("0.75", "Gwei"), "bobs balance is not right.");
     });
 
     it("Bobs Balance after withdraw should be right.", async function(){
-        const amount = toBN(toWei("1", "Gwei"));
+        const amount = toWei(toBN("1"), "Gwei");
         const balanceBefore = await web3.eth.getBalance(bob);
         await contractInstance.split( bob, carol, { from: alice, value: amount });
         const txObj = await contractInstance.withdraw({ from: bob });
@@ -81,13 +81,13 @@ contract("Splitter", (accounts) => {
     });
 
     it("Carols and Bobs internal balances after withdrawing should be 0.", async function(){
-        const amount = toBN(toWei("1", "Gwei"));
+        const amount = toWei(toBN("1"), "Gwei");
         await contractInstance.split(bob, carol, { from: alice, value: amount });
         await contractInstance.withdraw({ from: carol });
-        const carolsBalanceAfter = await (contractInstance.getBalance(carol));
+        const carolsBalanceAfter = await contractInstance.getBalance(carol);
         
         await contractInstance.withdraw({ from: bob });
-        const bobsBalanceAfter = await (contractInstance.getBalance(bob));
+        const bobsBalanceAfter = await contractInstance.getBalance(bob);
          
         assert.strictEqual(bobsBalanceAfter.toString(), "0", "bobs balance is not right.");
         assert.strictEqual(carolsBalanceAfter.toString(), "0", "carols balance is not right.");
