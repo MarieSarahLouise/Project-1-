@@ -15,7 +15,6 @@ window.addEventListener('load', async function(){
     Splitter.setProvider(web3.currentProvider);
     
     const displayMyAccounts =  accounts => {
-
     try {
         if(accounts.length == 0) {
             $("#balance").html("N/A");
@@ -40,61 +39,57 @@ window.addEventListener('load', async function(){
             $("#myAddresses").html(`Failed to get your addresses: ${ error }`);
         }        
     }
+});
 
     const sendSplit = async function() {
-        const gas = 300000; 
-        await Splitter.deployed();
-        const deployed = async function(){
+        const gas = 300000;
+        const deployed = await Splitter.deployed();
             deployed = _deployed;
-            return  _deployed.sendSplit.call(
+        async function deploy(success){
+            await  _deployed.sendSplit.call(
                 $("input[name = 'bob']").val(), 
                 $("input[name = 'carol']").val(),
                 $("input[name = 'amount']").val(),
                 { from: window.account, gas : gas });
-            };
-
-        const success = async function() {
-            if (!success) {
+                if(!success){
                     throw new Error("The transaction will fail anyway, not sending.");
                 }
-            deployed = await deployed.sendSplit(
-                $("input[name = 'bob']").val(), 
-                $("input[name = 'carol']").val(),
-                $("input[name = 'amount']").val(),
-                { from: window.account, gas: gas })
-                .on(
-                    "transactionHash",
-                    txHash => $("#status").html("Transaction on the way " + txHash)
-                );
-                return deployed;
-        };
+        }
+        const txObj = await deployed.sendSplit(
+            $("input[name = 'bob']").val(), 
+            $("input[name = 'carol']").val(),
+            $("input[name = 'amount']").val(),
+            { from: window.account, gas: gas });
 
-        const txObj = async function() {
-            const receipt = await txObj.receipt;
-            console.log("got receipt", receipt);
-            if (!receipt.status) {
-                console.error("Wrong status");
-                console.error(receipt);
-                $("#status").html("There was an error in the tx execution, status not 1");
-            } else if (receipt.logs.length == 0) {
-                console.error("Empty logs");
-                console.error(receipt);
-                $("#status").html("There was an error in the tx execution, missing expected event");
-            } else {
-                console.log(receipt.logs[0]);
-                $("#status").html("Transfer executed");
-            }
-            return await deployed.getBalance.call(window.account);
-            };
+        const receipt = await txObj.receipt;
+        console.log("got receipt", receipt);
+            
+        if (!receipt.status) {
+            console.error("Wrong status");
+            console.error(receipt);
+            $("#status").html("There was an error in the tx execution, status not 1");
+        } else if (receipt.logs.length == 0) {
+            console.error("Empty logs");
+            console.error(receipt);
+            $("#status").html("There was an error in the tx execution, missing expected event");
+        } else {
+            console.log(receipt.logs[0]);
+            $("#status").html("Transfer executed");
+        }
+            
+        try { 
+            const balance = $("#balance").html(balance.toString(10));
+        }
+        catch(e) {
+            $("#status").html(e.toString());
+            console.error(e);
+        };  
+            
+        return await deployed.getBalance.call(window.account);
+    };
 
-            try { 
-                const balance = $("#balance").html(balance.toString(10));
-            }
-            catch(e) {
-                $("#status").html(e.toString());
-                console.error(e);
-            };
-        };
-});
+            
+       
+
 
 
