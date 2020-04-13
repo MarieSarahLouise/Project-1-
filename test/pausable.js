@@ -1,6 +1,7 @@
 const Splitter = artifacts.require("Splitter");
 const assert = require("assert");
 const truffleAssert = require("truffle-assertions");
+const chai = require("chai");
 const { toWei, toBN } = web3.utils;
 
 contract("Splitter", (accounts) => {
@@ -13,7 +14,7 @@ contract("Splitter", (accounts) => {
 
     it("The contract should be paused when the pause() function is called.", async function() {
         await contractInstance.pause({ from: alice });
-        assert.strictEqual(await contractInstance.isPaused(), true);
+        chai.assert.isTrue(await contractInstance.isPaused());
     });
 
     it("The contract should only be paused by the Owner.", async function() {

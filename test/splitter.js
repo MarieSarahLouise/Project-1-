@@ -1,7 +1,8 @@
 const Splitter = artifacts.require("Splitter");
 const assert = require("assert");
-const truffleAssert = require("truffle-assertions");
+const chai = require("chai");
 const { toWei, toBN } = web3.utils;
+
 
 contract("Splitter", (accounts) => {
    
@@ -94,7 +95,7 @@ contract("Splitter", (accounts) => {
     });
 
     it("the Splitter should start un-paused.", async function() {
-        assert.strictEqual(await contractInstance.isPaused(), false); // assert.isFalse does not work: "TypeError: assert.isFalse is not a function"
+        chai.assert.isFalse(await contractInstance.isPaused());
     });
-
+    
 });

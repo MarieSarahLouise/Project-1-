@@ -1,7 +1,7 @@
 const Splitter = artifacts.require("Splitter");
 const assert = require("assert");
 const truffleAssert = require("truffle-assertions");
-const { toWei, toBN } = web3.utils;
+const chai = require("chai");
 
 contract("Splitter", (accounts) => {
    
@@ -20,7 +20,7 @@ contract("Splitter", (accounts) => {
     it("The contract should be killed if it was paused and the kill() function is called.", async function() {
         await contractInstance.pause({ from: alice });
         await contractInstance.kill({ from: alice });
-        assert.strictEqual(await contractInstance.isKilled(), true); //assert.isTrue() does not work => 'TypeError: assert.isTrue is not a function'
+        chai.assert.isTrue(await contractInstance.isKilled()); 
     });
 
     it("Only the Owner can kill the contract.", async function() {
