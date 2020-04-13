@@ -43,24 +43,19 @@ window.addEventListener('load', async function(){
 
     const sendSplit = async function() {
         const gas = 300000;
-        const deployed = await Splitter.deployed();
-            deployed = _deployed;
-        async function deploy(success){
-            await  _deployed.sendSplit.call(
-                $("input[name = 'bob']").val(), 
-                $("input[name = 'carol']").val(),
-                $("input[name = 'amount']").val(),
-                { from: window.account, gas : gas });
-                if(!success){
-                    throw new Error("The transaction will fail anyway, not sending.");
-                }
-        }
-        const txObj = await deployed.sendSplit(
+        const arguments =  [
             $("input[name = 'bob']").val(), 
             $("input[name = 'carol']").val(),
             $("input[name = 'amount']").val(),
-            { from: window.account, gas: gas });
-
+            { from: window.account, gas : gas }];
+            
+        try { 
+        const deployed = await Splitter.deployed();
+        const success = deployed.sendSplit.call.apply(delpoyed, arguments);
+            if(!success){
+                throw new Error("The transaction will fail anyway, not sending.");
+            }
+        const txObj = await deployed.sendSplit.apply(deployed, arguments);
         const receipt = await txObj.receipt;
         console.log("got receipt", receipt);
             
@@ -76,16 +71,10 @@ window.addEventListener('load', async function(){
             console.log(receipt.logs[0]);
             $("#status").html("Transfer executed");
         }
-            
-        try { 
-            const balance = $("#balance").html(balance.toString(10));
         }
         catch(e) {
-            $("#status").html(e.toString());
             console.error(e);
         };  
-            
-        return await deployed.getBalance.call(window.account);
     };
 
             
