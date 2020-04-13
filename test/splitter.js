@@ -93,25 +93,8 @@ contract("Splitter", (accounts) => {
         assert.strictEqual(carolsBalanceAfter.toString(), "0", "carols balance is not right.");
     });
 
-    it("Should not allow to pause, because the owner is not the msg.sender.", async function() {
-        await truffleAssert.reverts(
-            contractInstance.pause({ from: notOwner }),
-            "Only the owner can call this function."
-        );
-    });
-
     it("the Splitter should start un-paused.", async function() {
-        assert.strictEqual(await contractInstance.isPaused(), false);
+        assert.strictEqual(await contractInstance.isPaused(), false); // assert.isFalse does not work: "TypeError: assert.isFalse is not a function"
     });
 
-    it("The contract should be paused when the pause() function is called.", async function() {
-        await contractInstance.pause({ from: alice });
-        assert.strictEqual(await contractInstance.isPaused(), true);
-    });
-
-    it("The contract should be killed if the kill() function is called.", async function() {
-        await contractInstance.pause({ from: alice });
-        await contractInstance.kill({ from: alice });
-        assert.strictEqual(await contractInstance.isKilled(), true); //assert.isTrue() does not work => 'TypeError: assert.isTrue is not a function'
-    });
 });
