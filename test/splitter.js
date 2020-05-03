@@ -75,7 +75,7 @@ contract("Splitter", (accounts) => {
         const tx = await web3.eth.getTransaction(txObj.tx);
         const receipt = txObj.receipt;
         const balanceAfter = await web3.eth.getBalance(bob);
-        const gasCost = toBN((tx.gasPrice)).mul(toBN((receipt.gasUsed)));
+        const gasCost = toBN(tx.gasPrice).mul(toBN(receipt.gasUsed));
         const expectedBalanceAfter = toBN(balanceBefore).sub(toBN(gasCost)).add(toBN(toWei("0.5", "Gwei")));
 
         assert.strictEqual(balanceAfter.toString(), expectedBalanceAfter.toString(), "bobs balance is not right.");
