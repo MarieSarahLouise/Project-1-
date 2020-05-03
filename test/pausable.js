@@ -42,7 +42,7 @@ contract("Splitter", (accounts) => {
     it("The contract should start again, if the resume function is called.", async function() {
         await contractInstance.pause({ from: alice });
         await contractInstance.resume({ from: alice });
-        assert.strictEqual(await contractInstance.isPaused(), false);
+        chai.assert.isFalse(await contractInstance.isPaused());
     });
 
     it("Only the ownwe should resume th contract.", async function() {
