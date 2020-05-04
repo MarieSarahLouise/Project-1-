@@ -51,7 +51,7 @@ window.addEventListener('load', async function(){
             
         try { 
         const deployed = await Splitter.deployed();
-        const success = deployed.sendSplit.call.apply(delpoyed, arguments);
+        const success = await deployed.sendSplit.call.apply(deployed, arguments);
             if(!success){
                 throw new Error("The transaction will fail anyway, not sending.");
             }
